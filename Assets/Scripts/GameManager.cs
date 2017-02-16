@@ -1,24 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VectorEngine;
 
 public class GameManager : MonoBehaviour {
 
-	public GameObject Player;
-	public Rigidbody2D PlayerRB;
-	public float ForceX;
-	public float ForceY;
+	public SpriteRenderer PlayerSprite;
 
 	private Vector3 _TouchPos;
 	private Vector3 MousePos;
 
+	public float gravity;
+
+	public float Angle;
+	public float Force;
+
+	public Vector Speed = new Vector(0,0);
+	public Vector Gravity;
+
+	public Capsule Player;
 
 	void Start () {
-		PlayerRB = Player.GetComponent<Rigidbody2D> ();
+		Gravity = Gravity.Acceleration(gravity/10000, -90);
+		Player = new Capsule(Force/10000, Angle);
 	}
-	
 
-	void Update () {
+
+	void FixedUpdate () {
+		Speed += Gravity;
+
 
 		if (Input.GetKey (KeyCode.Mouse0)) {
 
@@ -27,31 +37,19 @@ public class GameManager : MonoBehaviour {
 			MousePos = Camera.main.ScreenToWorldPoint (MousePos);
 
 			if ( MousePos.x > 0) {
-				PlayerRB.AddRelativeForce (new Vector2 (ForceX, ForceY));
+				Speed += Speed.Acceleration (Player.Force, Player.Angle);
 			}
+
 			if (MousePos.x <= 0) {
-				PlayerRB.AddRelativeForce (new Vector2 (-ForceX, ForceY));
+				Speed += Speed.Acceleration (Player.Force, Player.Angle + (90 - Player.Angle) * 2);
 			}
-
 		}
+		Player.Position += Speed;
 
-		/*//touch controls
-		if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) {
-			
-			_TouchPos = Touch.position; 
-			_TouchPos.z = 0;
-			_TouchPos = Camera.main.ScreenToWorldPoint (_TouchPos);
-
-			if ( Touch.position.x > 0) {
-				PlayerRB.AddRelativeForce (new Vector2 (ForceX, ForceY));
-			}
-			if ( Touch.position.x <= 0) {
-				PlayerRB.AddRelativeForce (new Vector2 (-ForceX, ForceY));
-			}
-
-		}*/
-
-
+		PlayerSprite.transform.position = new Vector2 ( Player.Position.x, Player.Position.y);
 	}
+
+
+
 
 }
