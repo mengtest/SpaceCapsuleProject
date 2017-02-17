@@ -31,14 +31,21 @@ public class Hitbox {
 
 	public bool CheckCol (Hitbox other) {
 		
-		for (float i = 0f; i <= other.Size.x; i += 0.1f) {
-			for (float j = 0f; i <= other.Size.y; i += 0.1f) {
-				if (true){
+		for (float i = PosMin.x; i <= PosMax.x ; i += 0.1f) {
+			for (float j = PosMin.y; i <= PosMax.y; i += 0.1f) {
+				
+				if (other.PosMin.x < i < other.PosMax.x && other.PosMin.y < j < other.PosMax.y) {
+					return true;
+				} else {
+					return false;
 				}
+
 			}
 		}
 
-		return true;
-
 	}
+
+
+
+
 }
