@@ -12,7 +12,7 @@ namespace VectorEngine {
 			this.y = y;
 		}
 
-		public Vector Acceleration(float force, float angle) {
+		public static Vector Acceleration(float force, float angle) {
 			angle = angle * Mathf.Deg2Rad;
 			float x = Mathf.Cos (angle) * force;
 			float y = Mathf.Sin (angle) * force;

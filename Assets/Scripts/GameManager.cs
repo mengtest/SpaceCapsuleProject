@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour {
 	public Capsule Player;
 
 	void Start () {
-		Gravity = Gravity.Acceleration(gravity/10000, -90);
+		Gravity = Vector.Acceleration(gravity/10000, -90);
 		Player = new Capsule(Force/10000, Angle);
 	}
 
@@ -37,11 +37,11 @@ public class GameManager : MonoBehaviour {
 			MousePos = Camera.main.ScreenToWorldPoint (MousePos);
 
 			if ( MousePos.x > 0) {
-				Speed += Speed.Acceleration (Player.Force, Player.Angle);
+				Speed += Vector.Acceleration (Player.Force, Player.Angle);
 			}
 
 			if (MousePos.x <= 0) {
-				Speed += Speed.Acceleration (Player.Force, Player.Angle + (90 - Player.Angle) * 2);
+				Speed += Vector.Acceleration (Player.Force, Player.Angle + (90 - Player.Angle) * 2);
 			}
 		}
 		Player.Position += Speed;
