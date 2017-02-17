@@ -33,6 +33,18 @@ namespace VectorEngine {
 			return new Vector (resX, resY);
 		}
 
+		public static Vector operator* (Vector a, float b) {
+			a.x *= b;
+			a.y *= b;
 
+			return a;
+		}
+
+		public static Vector operator/ (Vector a, float b) {
+			a.x /= b;
+			a.y /= b;
+
+			return a;
+		}
 	}
 }
