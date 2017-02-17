@@ -34,7 +34,7 @@ public class Hitbox {
 		for (float i = PosMin.x; i <= PosMax.x ; i += 0.1f) {
 			for (float j = PosMin.y; i <= PosMax.y; i += 0.1f) {
 				
-				if (other.PosMin.x < i < other.PosMax.x && other.PosMin.y < j < other.PosMax.y) {
+				if (other.PosMin.x < i && i < other.PosMax.x && other.PosMin.y < j && j < other.PosMax.y) {
 					return true;
 				} else {
 					return false;
@@ -42,6 +42,7 @@ public class Hitbox {
 
 			}
 		}
+		return false;
 
 	}
 
