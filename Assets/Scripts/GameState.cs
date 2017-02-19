@@ -14,6 +14,8 @@ public class GameState {
 			return "out of bounds";
 		} else if (PlayerPos.y <= -9) {
 			return "crash";
+		} else if (Capsule.Shield <= 0) {
+			return "no shield";
 		} else {
 			return "ok";
 		}
@@ -29,6 +31,9 @@ public class GameState {
 			go = true;
 			break;
 		case "crash":
+			go = true;
+			break;
+		case "no shield":
 			go = true;
 			break;
 		case "ok":

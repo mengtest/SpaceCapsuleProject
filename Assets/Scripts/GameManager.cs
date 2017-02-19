@@ -13,8 +13,11 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	private float _gravity, _angle, _force;
 
-	public Vector Speed = new Vector(0,0);
-	public Vector Gravity;
+	[SerializeField]
+	private float Threshold, FuelLoss, ShieldLoss;
+
+	private Vector Speed = new Vector(0,0);
+	private Vector Gravity;
 
 	public Capsule Player;
 
@@ -29,25 +32,25 @@ public class GameManager : MonoBehaviour {
 
 	}
 
-	//GameLoop
-	void FixedUpdate () {
+	void FixedUpdate() {
+		
+		//GameLoop
 		if (!GameOver) {
-			PhysicsUpdate ();
+			CapsuleStateUpdate ();
 			DisplayUpdate ();
 			State = GameState.CheckState ();
 			GameState.MessageHandler (State, out GameOver);
 		}
-
 	}
-
-
 	//Update sprites' positions
 	void DisplayUpdate() {
 		PlayerSprite.transform.position = new Vector2 ( Capsule.Position.x, Capsule.Position.y);
 	}
 
-	//Updates Vectors & Positions
-	void PhysicsUpdate () {
+	//Updates Capsule 
+	void CapsuleStateUpdate () {
+
+		//Position update using vectors
 		Speed += Gravity;
 		Capsule.Position += Speed;
 
@@ -59,6 +62,15 @@ public class GameManager : MonoBehaviour {
 			Speed += Vector.Acceleration (Player.Force, Player.Angle + (90 - Player.Angle) * 2);
 			break;
 		}
+
+		//Heat shield lost if vertical speed is too great
+		if (Speed.y < Threshold/10000) {
+			Capsule.Shield -= ShieldLoss;
+			Debug.Log ("Losing Shield");
+		}
+
+
+
 	}
 
 	//Checks for touch/mouse input, returns "left" or "right"
