@@ -5,7 +5,7 @@ using VectorEngine;
 
 public class Capsule {
 
-	public Vector Position = new Vector(0,8);
+	public static Vector Position = new Vector(0,8);
 
 	public float Force;
 	public float Angle;
