@@ -12,14 +12,12 @@ public class Capsule {
 
 	public static float Fuel = 1000;
 	public static float Shield = 1000; 
-	public string boule = "dat ass";
 
 	public Capsule(float force, float angle) {
 		Force = force;
 		Angle = angle;
 
 		Position.x = Random.Range (-3f, 3f);
-		Debug.Log (boule);
 	}
 
 

@@ -2,19 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 using VectorEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
+	[Header ("Objects")]
 	public SpriteRenderer PlayerSprite;
+	[Space(5)]
+	public Text FuelText;
+	public Image FuelGauge;
+	[Space(5)]
+	public Text ShieldText;
+	public Image ShieldGauge;
+
 
 	private Vector3 _TouchPos;
 	private Vector3 MousePos;
 
+	[Header ("Capsule physics values")]
 	[SerializeField]
-	private float _gravity, _angle, _force;
+	private float _gravity;
+	[SerializeField]
+	private float _angle;
+	[SerializeField]
+	private float _force;
 
+
+	[Header ("Shield & Fuel Values")]
 	[SerializeField]
-	private float Threshold, FuelLoss, ShieldLoss;
+	private float Threshold;
+	[SerializeField]
+	private float FuelLoss;
+	[SerializeField]
+	private float ShieldLoss;
+
 
 	private Vector Speed = new Vector(0,0);
 	private Vector Gravity;
@@ -41,11 +62,25 @@ public class GameManager : MonoBehaviour {
 			State = GameState.CheckState ();
 			GameState.MessageHandler (State, out GameOver);
 		}
+
 	}
+
+
+
 	//Update sprites' positions
 	void DisplayUpdate() {
 		PlayerSprite.transform.position = new Vector2 ( Capsule.Position.x, Capsule.Position.y);
+		if (Capsule.Shield >= 0) ShieldText.text = Capsule.Shield.ToString ();
+		else ShieldText.text = "0";
+
+		if (Capsule.Fuel >= 0) FuelText.text = Capsule.Fuel.ToString ();
+		else FuelText.text = "0";
+
+		ShieldGauge.rectTransform.localScale = new Vector2 ((ShieldGauge.preferredWidth / 1000 * Capsule.Shield)/10, 1);
+		FuelGauge.rectTransform.localScale = new Vector2 ((FuelGauge.preferredWidth / 1000 * Capsule.Fuel)/-10, 1);
 	}
+
+
 
 	//Updates Capsule 
 	void CapsuleStateUpdate () {
@@ -54,24 +89,33 @@ public class GameManager : MonoBehaviour {
 		Speed += Gravity;
 		Capsule.Position += Speed;
 
-		switch (InputSide ()) {
-		case "left":
-			Speed += Vector.Acceleration (Player.Force, Player.Angle);
-			break;
-		case "right":
-			Speed += Vector.Acceleration (Player.Force, Player.Angle + (90 - Player.Angle) * 2);
-			break;
+		//Accelerates depending on input side and if fuel >0
+		if (Capsule.Fuel > 0) {
+			switch (InputSide ()) {
+			case "left":
+				Speed += Vector.Acceleration (Player.Force, Player.Angle);
+				Capsule.Fuel -= FuelLoss;
+				break;
+			case "right":
+				Speed += Vector.Acceleration (Player.Force, Player.Angle + (90 - Player.Angle) * 2);
+				Capsule.Fuel -= FuelLoss;
+				break;
+			default:
+				break;
+			}
 		}
 
 		//Heat shield lost if vertical speed is too great
-		if (Speed.y < Threshold/10000) {
-			Capsule.Shield -= ShieldLoss;
-			Debug.Log ("Losing Shield");
+		if (Speed.y < Threshold / 10000) {
+			Capsule.Shield -= Mathf.RoundToInt(ShieldLoss * Speed.y * -100);
+			PlayerSprite.color = Color.red; 
+		} else { 
+			PlayerSprite.color = Color.white;
 		}
 
-
-
 	}
+
+
 
 	//Checks for touch/mouse input, returns "left" or "right"
 	string InputSide () {
@@ -82,7 +126,7 @@ public class GameManager : MonoBehaviour {
 			MousePos = Camera.main.ScreenToWorldPoint (MousePos);
 
 			if ( MousePos.x > 0) return "left";
-			if ( MousePos.x <= 0) return "right";
+			else if ( MousePos.x <= 0) return "right";
 		}
 		return null;
 	}

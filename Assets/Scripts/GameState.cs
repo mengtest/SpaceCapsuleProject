@@ -12,7 +12,7 @@ public class GameState {
 
 		if (PlayerPos.x > 7.3f | PlayerPos.x < -7.3f) {
 			return "out of bounds";
-		} else if (PlayerPos.y <= -9) {
+		} else if (PlayerPos.y <= -8.8) {
 			return "crash";
 		} else if (Capsule.Shield <= 0) {
 			return "no shield";
