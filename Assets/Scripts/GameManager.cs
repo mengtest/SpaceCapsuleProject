@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour {
 		else FuelText.text = "0";
 
 		ShieldGauge.rectTransform.localScale = new Vector2 ((ShieldGauge.preferredWidth / 1000 * Capsule.Shield)/10, 1);
-		FuelGauge.rectTransform.localScale = new Vector2 ((FuelGauge.preferredWidth / 1000 * Capsule.Fuel)/-10, 1);
+		FuelGauge.rectTransform.localScale = new Vector2 ((FuelGauge.preferredWidth / 1000 * Capsule.Fuel)/10, 1);
 	}
 
 
