@@ -36,6 +36,9 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	private float ShieldLoss;
 
+	[Header ("UI Text")]
+	public Text UIText;
+
 
 	private Vector Speed = new Vector(0,0);
 	private Vector Gravity;
@@ -51,6 +54,8 @@ public class GameManager : MonoBehaviour {
 		Gravity = Vector.Acceleration(_gravity/10000, -90);
 		Player = new Capsule(_force/10000, _angle);
 
+		//UI Text assignation
+
 	}
 
 	void FixedUpdate() {
@@ -59,8 +64,7 @@ public class GameManager : MonoBehaviour {
 		if (!GameOver) {
 			CapsuleStateUpdate ();
 			DisplayUpdate ();
-			State = GameState.CheckState ();
-			GameState.MessageHandler (State, out GameOver);
+			StateUpdate ();
 		}
 
 	}
@@ -80,7 +84,11 @@ public class GameManager : MonoBehaviour {
 		FuelGauge.rectTransform.localScale = new Vector2 ((FuelGauge.preferredWidth / 1000 * Capsule.Fuel)/10, 1);
 	}
 
-
+	void StateUpdate() {
+		State = GameState.CheckState ();
+		GameState.MessageHandler (State, out GameOver);
+		UIText.text = GameState.TextHandler (State);
+	}
 
 	//Updates Capsule 
 	void CapsuleStateUpdate () {
