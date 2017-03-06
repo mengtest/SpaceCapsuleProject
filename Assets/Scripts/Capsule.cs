@@ -20,6 +20,10 @@ public class Capsule {
 		Position.x = Random.Range (-3f, 3f);
 	}
 
-
+	public static void ResetValues() {
+		Fuel = 1000;
+		Shield = 1000; 
+		Position = new Vector(0,8);
+	}
 
 }

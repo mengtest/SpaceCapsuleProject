@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using VectorEngine;
 using UnityEngine.UI;
 
@@ -8,13 +9,6 @@ public class GameManager : MonoBehaviour {
 
 	[Header ("Objects")]
 	public SpriteRenderer PlayerSprite;
-	[Space(5)]
-	public Text FuelText;
-	public Image FuelGauge;
-	[Space(5)]
-	public Text ShieldText;
-	public Image ShieldGauge;
-
 
 	private Vector3 _TouchPos;
 	private Vector3 MousePos;
@@ -36,8 +30,15 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	private float ShieldLoss;
 
-	[Header ("UI Text")]
+	[Header ("UI")]
 	public Text UIText;
+	public Button RestartButton;
+	[Space(10)]
+	public Text FuelText;
+	public Image FuelGauge;
+	[Space(10)]
+	public Text ShieldText;
+	public Image ShieldGauge;
 
 
 	private Vector Speed = new Vector(0,0);
@@ -62,9 +63,17 @@ public class GameManager : MonoBehaviour {
 		
 		//GameLoop
 		if (!GameOver) {
+			
 			CapsuleStateUpdate ();
 			DisplayUpdate ();
 			StateUpdate ();
+
+			RestartButton.gameObject.SetActive (false);
+
+		} else {
+			
+			RestartButton.gameObject.SetActive (true);
+
 		}
 
 	}
@@ -84,11 +93,16 @@ public class GameManager : MonoBehaviour {
 		FuelGauge.rectTransform.localScale = new Vector2 ((FuelGauge.preferredWidth / 1000 * Capsule.Fuel)/10, 1);
 	}
 
+
+
+	//Updates GameState
 	void StateUpdate() {
 		State = GameState.CheckState ();
 		GameState.MessageHandler (State, out GameOver);
 		UIText.text = GameState.TextHandler (State);
 	}
+
+
 
 	//Updates Capsule 
 	void CapsuleStateUpdate () {
@@ -137,6 +151,14 @@ public class GameManager : MonoBehaviour {
 			else if ( MousePos.x <= 0) return "right";
 		}
 		return null;
+	}
+
+
+	//Function for RestartButton
+	public void RestartScene() {
+		SceneManager.LoadScene ("Main");
+		Capsule.ResetValues ();
+		GameOver = false;
 	}
 
 }
